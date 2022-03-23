@@ -39,3 +39,40 @@ SELECT name FROM animals WHERE escape_attempts = (
 );
 SELECT species, MIN(weight_kg), MAX(weight_kg) FROM animals GROUP BY species;
 SELECT species, AVG(escape_attempts) FROM animals WHERE date_of_birth > '1990-01-01' AND date_of_birth < '2000-12-31' GROUP BY species;
+
+SELECT name FROM animals INNER JOIN owners ON animals.owner_id = owners.id WHERE owners.full_name = 'Melody Pond';
+SELECT name FROM animals INNER JOIN species ON animals.species_id = species.id WHERE species.name = 'Pokemon';
+SELECT full_name, animals.name from owners LEFT JOIN animals ON owners.id = animals.owner_id;
+SELECT species.name, count(animals.species_id) FROM animals INNER JOIN species ON animals.species_id = species.id GROUP BY species.name;
+SELECT full_name, animals.name 
+FROM animals 
+INNER JOIN owners 
+ON animals.owner_id = owners.id 
+INNER JOIN species 
+ON animals.species_id = species.id 
+WHERE owners.full_name = 'Jennifer Orwell' AND species.name = 'Digimon';
+SELECT full_name, name 
+FROM animals 
+INNER JOIN owners 
+ON animals.owner_id = owners.id 
+WHERE owners.full_name = 'Dean Winchester' AND escape_attempts = 0;
+SELECT full_name 
+FROM (
+	SELECT full_name, count(name) as counted 
+	FROM animals 
+	INNER JOIN owners 
+	ON owner_id = owners.id 
+	GROUP BY full_name
+) AS foo 
+WHERE counted = (
+	SELECT max(bar.counted) 
+	FROM (
+		select full_name, count(name) 
+		AS counted 
+		FROM animals 
+		INNER JOIN owners 
+		ON owner_id = owners.id 
+		GROUP BY owners.full_name
+	) 
+	as bar
+);

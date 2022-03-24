@@ -76,3 +76,94 @@ WHERE counted = (
 	) 
 	as bar
 );
+
+SELECT animal_name 
+FROM visitors_view 
+WHERE vet_name = 'William Tatcher' 
+ORDER BY date_of_visit DESC 
+LIMIT 1;
+
+SELECT COUNT(*) 
+FROM visitors_view 
+WHERE vet_name = 'Stephanie Mendez';
+
+SELECT vets.name as Vname,
+species.name as Sname 
+FROM vets 
+LEFT JOIN specializations 
+ON vets.id = specializations.vet_id 
+LEFT JOIN species 
+ON species.id = specializations.specie_id;
+
+SELECT animal_name 
+FROM visitors_view 
+WHERE date_of_visit > '2020-04-01' 
+AND date_of_visit < '2020-09-30' 
+AND vet_name = 'Stephanie Mendez';
+
+SELECT animal_name 
+FROM (
+	SELECT animal_name, 
+	COUNT(animal_name) as animal_count 
+	FROM visitors_view 
+	GROUP BY animal_name 
+	ORDER BY animal_count DESC 
+	LIMIT 1
+) AS counted;
+
+SELECT animal_name 
+FROM visitors_view 
+WHERE vet_name = 'Maisy Smith' 
+ORDER BY date_of_visit 
+LIMIT 1;
+
+SELECT animals.name AS animal_name, 
+date_of_birth, 
+neutered, 
+escape_attempts, 
+weight_kg, 
+full_name AS owner, 
+species.name AS specie, 
+vets.name AS vet, 
+vets.age, 
+date_of_graduation, 
+date_of_visit 
+FROM animals 
+INNER JOIN species 
+ON animals.species_id = species.id 
+INNER JOIN owners 
+ON animals.owner_id = owners.id 
+INNER JOIN visits 
+ON visits.animal_id = animals.id 
+INNER JOIN vets 
+ON visits.vet_id = vets.id 
+ORDER BY date_of_visit DESC 
+LIMIT 1;
+
+SELECT COUNT(*) 
+FROM animals 
+INNER JOIN visits 
+ON visits.animal_id = animals.id 
+INNER JOIN vets 
+ON vets.id = visits.vet_id 
+INNER JOIN specializations 
+ON specializations.vet_id = vets.id 
+WHERE vets.name <> 'Stephanie Mendez' 
+AND specializations.specie_id <> animals.species_id;
+
+SELECT name 
+FROM (
+	SELECT species.name, 
+	COUNT(*) 
+	FROM animals 
+	INNER JOIN visits 
+	ON visits.animal_id = animals.id 
+	INNER JOIN vets 
+	ON vets.id = visits.vet_id 
+	INNER JOIN species 
+	ON species.id = animals.species_id 
+	WHERE vets.name = 'Maisy Smith' 
+	GROUP BY species.name 
+	ORDER BY count DESC 
+	LIMIT 1
+) AS foo;

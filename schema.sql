@@ -56,3 +56,27 @@ CREATE TABLE visits(
   FOREIGN KEY(animal_id)
   REFERENCES animals(id)
 );
+
+CREATE VIEW 
+visitors_view as
+SELECT animals.id as animal_id,
+  animals.name as animal_name,
+  vets.id as vet_id,
+  vets.name as vet_name, 
+  visits.date_of_visit
+FROM animals 
+INNER JOIN visits 
+ON animals.id = visits.animal_id 
+INNER JOIN vets 
+ON vets.id = visits.vet_id;
+
+CREATE VIEW specializations_view AS
+SELECT vet_id,
+  vets.name AS vet_name,
+  specie_id,
+  species.name AS species_name
+FROM vets 
+INNER JOIN specializations 
+ON vets.id = specializations.vet_id
+INNER JOIN species
+ON species.id = specializations.specie_id;

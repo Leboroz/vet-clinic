@@ -1,4 +1,5 @@
-# curriculum-databases-projects-template
+#Vet Clinic 
+![schema](./diagram.png)
 
 ## Getting Started
 
